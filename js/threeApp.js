@@ -69,12 +69,11 @@ function moving() {
     document.addEventListener("keydown", onDocumentKeyDown, false);
     function onDocumentKeyDown(event) {
         var keyCode = event.which;
-        if (keyCode == 87) {
-            //cube.position.y += ySpeed;
-        } else if (keyCode == 83) {
-            //cube.position.y -= ySpeed;
-        } else if (keyCode == 65) {
+        if (keyCode == 87) { //W
+            snake.moveForward();
+        } else if (keyCode == 83) { //S
 
+        } else if (keyCode == 65) { //A
             snake.moveLeft();
         } else if (keyCode == 68) {
            // cube.position.x += xSpeed;
@@ -89,11 +88,14 @@ function moving() {
 moving();
 
 
+
+
 requestAnimationFrame(render);
 function render() {
     // Update camera position based on the controls
     controls.update();
 
+    //snake.moveForever();
 
 
     // Re-render the scene
