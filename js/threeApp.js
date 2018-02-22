@@ -38,7 +38,6 @@ scene.add( gridHelper );
 var snake = new Snake(scene);
 
 
-
 /*
 var geometry = new THREE.OctahedronGeometry(1,1);
 var material = new THREE.MeshStandardMaterial( {
@@ -65,9 +64,6 @@ renderer.render(scene, camera);
 var controls = new THREE.OrbitControls( camera, renderer.domElement );
 controls.addEventListener( 'change', function() { renderer.render(scene, camera); } ); // add this only if there is no animation loop (requestAnimationFrame)
 
-// movement - please calibrate these values
-var xSpeed = 0.0001;
-var ySpeed = 0.0001;
 
 function moving() {
     document.addEventListener("keydown", onDocumentKeyDown, false);
@@ -89,16 +85,14 @@ function moving() {
 }
 
 
-moving();
 
+moving();
 
 
 requestAnimationFrame(render);
 function render() {
     // Update camera position based on the controls
     controls.update();
-
-
 
 
 
