@@ -1,18 +1,16 @@
 function Snake(scene) {
 
-
     this.scene = scene;
-
     this.size = 6; //should to be size +1
     this.cubes = [this.size];
-    this.cubes2 = [this.size];
+    this.cubesLeft = [this.size];
+    this.cubesForward = [this.size];
 
     this.speed = 0.5;
 
-
     this.direction = 'forward';
-    var d = true;
-    for (var i = 0; i < this.size -1; i++) {
+
+    for (var i = 0; i < this.size - 1; i++) {
         var geometry = new THREE.BoxGeometry(1, 1, 1);
         var material = new THREE.MeshBasicMaterial({color: 0xff0051});
         var cube = new THREE.Mesh(geometry, material);
@@ -26,64 +24,128 @@ function Snake(scene) {
 
     this.moveForward = function forward() {
 
-        for (var i = 1; i < this.size ; i++) {
-            this.cubes[i].position.x -= this.speed;
+
+        if (this.direction === 'forward' && this.cubesLeft.length===1) {
+
+            for (var j = 1; j < this.cubes.length; j++) {
+
+                this.cubes[j].position.x -= this.speed;
+
+            }
+
+        } else {
+
+
+            if (!this.scene.getObjectByName('tmpForward')) {
+
+                var vector = new THREE.Vector3();
+                vector.setFromMatrixPosition(this.cubes[1].matrixWorld);
+
+                var geometry = new THREE.BoxGeometry(1, 1, 1);
+                var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+                tmpCubeForward = new THREE.Mesh(geometry, material);
+                tmpCubeForward.position.x = vector.x;
+                tmpCubeForward.position.y = vector.y;
+                tmpCubeForward.position.z = vector.z;
+                tmpCubeForward.name = 'tmpForward';
+                this.scene.add(tmpCubeForward);
+
+                this.cubesForward.push(this.cubes[1]);
+            }
+
+            for (var i = 1; i < this.size; i++) {
+
+
+
+
+
+                if (this.cubes[i].position.x === tmpCubeForward.position.x && this.cubes[i].position.y === tmpCubeForward.position.y && this.cubes[i].position.z === tmpCubeForward.position.z) {
+
+
+                    if (this.cubesForward.indexOf(this.cubes[i], this.cubesForward) <= -1) {
+                        this.cubesForward.push(this.cubes[i]);
+                    }
+
+                    if (i === this.size - 1) {
+                        this.direction = 'forward';
+                    }
+                }
+
+
+                if (this.cubesForward[i] !== undefined) {
+                    this.cubesForward[i].position.x -= this.speed;
+                } else {
+                    this.cubes[i].position.z += this.speed;
+                }
+
+
+                if (this.direction === 'forward') {
+                    var selectedObject = this.scene.getObjectByName(tmpCubeForward.name);
+                    this.scene.remove(selectedObject);
+                    this.cubesForward = [this.size];
+
+                }
+
+            }
+
         }
-
-
     };
 
 
     this.moveLeft = function left() {
 
 
-        if(this.direction === 'left'){
+        if (this.direction === 'left') {
 
             for (var j = 1; j < this.cubes.length; j++)
                 this.cubes[j].position.z += this.speed;
-
 
         } else {
 
 
             if (!this.scene.getObjectByName('tmpLeft')) {
+
+                var vector = new THREE.Vector3();
+                vector.setFromMatrixPosition(this.cubes[1].matrixWorld);
+
                 var geometry = new THREE.BoxGeometry(1, 1, 1);
                 var material = new THREE.MeshBasicMaterial({color: 0xff0051});
                 tmpCube = new THREE.Mesh(geometry, material);
-                tmpCube.position.x += this.cubes[1].position.x;
-                tmpCube.position.y += this.cubes[1].position.y;
+                tmpCube.position.x = this.cubes[1].position.x;
+                tmpCube.position.y = this.cubes[1].position.y;
+                tmpCube.position.z = vector.z;
                 tmpCube.name = 'tmpLeft';
                 this.scene.add(tmpCube);
 
-                this.cubes2.push(this.cubes[1]);
+                this.cubesLeft.push(this.cubes[1]);
             }
 
-            for (var i = 1; i < this.size ; i++) {
 
-                if (this.cubes[i].position.x === tmpCube.position.x && this.cubes[i].position.y === tmpCube.position.y && this.cubes[i].position.z === tmpCube.position.z) {
+            for (var i = 1; i < this.size; i++) {
 
-                    if (this.cubes2.indexOf(this.cubes[i], this.cubes2) <= -1) {
-                        this.cubes2.push(this.cubes[i]);
+                if (this.cubes[i].position.x <= tmpCube.position.x && this.cubes[i].position.y === tmpCube.position.y && this.cubes[i].position.z === tmpCube.position.z) {
+
+                    if (this.cubesLeft.indexOf(this.cubes[i], this.cubesLeft) <= -1) {
+                        this.cubesLeft.push(this.cubes[i]);
                     }
 
-                    if (i === this.size) {
+                    if (i === this.size - 1) {
                         this.direction = 'left';
-                     //   this.cubes = this.cubes2;
-
                     }
                 }
 
-                for (var j = 1; j < this.cubes2.length; j++)
-                    this.cubes2[j].position.z += 0.09;
-
-
-                if (i >= this.cubes2.length)
+                if (this.cubesLeft[i] !== undefined) {
+                    this.cubesLeft[i].position.z += this.speed;
+                } else {
                     this.cubes[i].position.x -= this.speed;
+                }
 
-                if(this.direction === 'left'){
-                    this.cubes = $.map(this.cubes2, function (obj) {
-                        return $.extend(true, {}, obj);
-                    });
+
+                if (this.direction === 'left') {
+                    var selectedObject = this.scene.getObjectByName(tmpCube.name);
+                    this.scene.remove(selectedObject);
+                    this.cubesLeft = [this.size];
+
                 }
 
 

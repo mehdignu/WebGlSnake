@@ -1,7 +1,6 @@
 // Create a scene which will hold all our meshes to be rendered
 var scene = new THREE.Scene();
 scene.updateMatrixWorld();
-
 // Create and position a camera
 var camera = new THREE.PerspectiveCamera(
     100,                                   // Field of view
