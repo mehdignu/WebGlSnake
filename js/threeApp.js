@@ -69,15 +69,16 @@ function moving() {
     function onDocumentKeyDown(event) {
         var keyCode = event.which;
         if (keyCode == 87) { //W
-            snake.moveForward();
+            snake.moveUp();
         } else if (keyCode == 83) { //S
-
+            snake.moveDown();
         } else if (keyCode == 65) { //A
             snake.moveLeft();
-        } else if (keyCode == 68) {
+        } else if (keyCode == 68) {//D
+            snake.moveRight();
            // cube.position.x += xSpeed;
         } else if (keyCode == 32) {
-            //cube.position.set(0, 0, 0);
+
         }
     };
 }
