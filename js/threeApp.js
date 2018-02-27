@@ -29,12 +29,68 @@ document.body.appendChild( renderer.domElement );
 var size = 10;
 var divisions = 10;
 
-var gridHelper = new THREE.GridHelper( size, divisions );
+var gridHelper = new THREE.GridHelper( size , divisions );
 scene.add( gridHelper );
 
 
 var snake = new Snake(scene);
 
+var uniforms = {
+    delta: {value: 0}
+};
+
+//custom shader for the speed accelerating cube
+var material = new THREE.ShaderMaterial({
+    uniforms: uniforms,
+    vertexShader: document.getElementById('vertexShaderSpeed').textContent,
+    fragmentShader: document.getElementById('fragmentShaderSpeed').textContent
+});
+//var geometry = new THREE.BoxGeometry(1,1,1);
+
+//var shapeOne = new THREE.Mesh(geometry, material);
+//shapeOne.position.y += 0.5;
+
+
+var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
+var meshPoint = new THREE.Mesh(geometry, material);
+meshPoint.y += 0.5;
+scene.add(meshPoint);
+
+
+
+//attribute
+var displacement = new Float32Array(geometry.attributes.position.count);
+
+for (var i = 0; i < displacement.length; i ++) {
+    displacement[i] = Math.sin(i);
+}
+
+
+geometry.addAttribute('displacement', new THREE.BufferAttribute(displacement,1));
+
+
+/*
+//custom verticies - mesh
+var geom = new THREE.Geometry();
+var v1 = new THREE.Vector3(0,0,0);
+var v2 = new THREE.Vector3(0,50,0);
+var v3 = new THREE.Vector3(0,50,50);
+
+geom.vertices.push(v1);
+geom.vertices.push(v2);
+geom.vertices.push(v3);
+
+geom.faces.push( new THREE.Face3( 0, 1, 2 ) );
+geom.computeFaceNormals();
+
+var object = new THREE.Mesh( geom, new THREE.MeshNormalMaterial() );
+
+object.position.z = -100;//move a bit back - size of 500 is a bit big
+object.rotation.y = -Math.PI * .5;//triangle is pointing in depth, rotate it -90 degrees on Y
+
+scene.add(object);
+
+*/
 
 /*
 var geometry = new THREE.OctahedronGeometry(1,1);
@@ -86,17 +142,25 @@ function moving() {
 
 moving();
 
-
-
+var delta = 0;
 
 requestAnimationFrame(render);
 function render() {
+
+    //update point cube
+    delta += 0.1;
+    meshPoint.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;
+    for (var i = 0; i < displacement.length; i ++) {
+        displacement[i] = 0.5 + Math.sin(i + delta) * 0.25;
+    }
+    meshPoint.geometry.attributes.displacement.needsUpdate = true;
+    //end update point cube
+
+
+
     // Update camera position based on the controls
     controls.update();
 
-    //snake.moveForever();
-
-   // snake.mover();
     // Re-render the scene
     renderer.render(scene, camera);
 

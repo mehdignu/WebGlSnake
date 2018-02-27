@@ -13,6 +13,46 @@
         src="https://code.jquery.com/jquery-2.2.4.min.js"
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
         crossorigin="anonymous"></script>
+
+<script type="x-shader/x-vertex" id="vertexShaderSpeed">
+
+attribute float displacement;
+uniform float delta;
+varying float vOpacity;
+varying vec3 vUv;
+void main() {
+
+    vUv = position;
+    vOpacity = displacement;
+
+    vec3 p = position;
+
+
+    p.x += sin(displacement) * 0.5;
+
+    p.y += 0.5;
+    p.y += sin(displacement) * 0.5;
+ 	vec4 modelViewPosition = modelViewMatrix * vec4(p, 1.0);
+	gl_Position = projectionMatrix * modelViewPosition;
+}
+
+</script>
+
+<script type="x-shader/x-fragment" id="fragmentShaderSpeed">
+
+uniform float delta;
+varying float vOpacity;
+varying vec3 vUv;
+    void main(){
+    float r = 1.0 + cos(vUv.x * delta);
+    float g = 0.5 + sin(delta);
+    float b = 0.0;
+        gl_FragColor = vec4(r, g, b, vOpacity);
+    }
+
+</script>
+
+
 <script src="js/Snake.js"></script>
 <script src="js/three.js"></script>
 <script src="js/OrbitControls.js"></script>

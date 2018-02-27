@@ -23,14 +23,6 @@ function Snake(scene) {
     }
 
 
-
-    this.mover = function mover() {
-
-        this.moveRight();
-
-    };
-
-
     this.moveUp = function up() {
 
         if ((this.lock.isLocked === 0 || this.lock.direc === "up") && this.direction !== "down") {
