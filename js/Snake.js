@@ -106,6 +106,14 @@ function Snake(scene) {
     };
 
 
+    this.checkBorders = function () {
+
+        if(this.cubes[1].position.x > 8.5 || this.cubes[1].position.x < -8.5 || this.cubes[1].position.z > 8.5 || this.cubes[1].position.z < -8.5) {
+            console.log('ddd');
+        }
+    };
+
+
     this.moveRight = function right() {
 
         if ((this.lock.isLocked === 0 || this.lock.direc === "right")  && this.direction !== "left") {
@@ -114,6 +122,8 @@ function Snake(scene) {
 
                 for (var j = 1; j < this.cubes.length; j++) {
                     this.cubes[j].position.z -= this.speed;
+
+
                 }
 
 
