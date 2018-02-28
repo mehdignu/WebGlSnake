@@ -22,7 +22,9 @@ function Snake(scene) {
         this.cubes.push(cube);
     }
 
-
+    /**
+     * move the snake forward/up
+     */
     this.moveUp = function up() {
 
         if ((this.lock.isLocked === 0 || this.lock.direc === "up") && this.direction !== "down") {
@@ -105,15 +107,9 @@ function Snake(scene) {
         }
     };
 
-
-    this.checkBorders = function () {
-
-        if(this.cubes[1].position.x > 8.5 || this.cubes[1].position.x < -8.5 || this.cubes[1].position.z > 8.5 || this.cubes[1].position.z < -8.5) {
-            console.log('ddd');
-        }
-    };
-
-
+    /**
+     * move the snake to the right
+     */
     this.moveRight = function right() {
 
         if ((this.lock.isLocked === 0 || this.lock.direc === "right")  && this.direction !== "left") {
@@ -198,7 +194,9 @@ function Snake(scene) {
         }
     };
 
-
+    /**
+     * move the snake left
+     */
     this.moveLeft = function left() {
 
         if ((this.lock.isLocked === 0 || this.lock.direc === "left") && this.direction !== "right") {
@@ -275,6 +273,9 @@ function Snake(scene) {
         }
     };
 
+    /**
+     * move the snake down
+     */
     this.moveDown = function down() {
 
         if ((this.lock.isLocked === 0 || this.lock.direc === "down") && this.direction !== "forward") {
@@ -353,6 +354,20 @@ function Snake(scene) {
             }
         }
     };
+
+
+    /**
+     * check if the snake out of the borders
+     * @returns {boolean}
+     */
+    this.checkBorders = function () {
+
+        if(this.cubes[1].position.x > 8.5 || this.cubes[1].position.x < -8.5 || this.cubes[1].position.z > 8.5 || this.cubes[1].position.z < -8.5) {
+            return true;
+        }
+    };
+
+
 
 
     //end of snake

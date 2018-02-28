@@ -1,39 +1,76 @@
 // Create a scene which will hold all our meshes to be rendered
-var scene = new THREE.Scene();
+var scene = null;
 // Create and position a camera
-var camera = new THREE.PerspectiveCamera(
-    100,                                   // Field of view
-    window.innerWidth / window.innerHeight, // Aspect ratio
-    0.1,                                  // Near clipping pane
-    1000                                  // Far clipping pane
-);
-
-
-// Reposition the camera
-camera.position.set(12, 12, 0);
-
-// Point the camera at a given coordinate
-camera.lookAt(new THREE.Vector3(0, 0, 0));
-
+var camera= null;
 // Create a renderer
-var renderer = new THREE.WebGLRenderer({antialias: true});
-
-// Size should be the same as the window
-renderer.setSize(window.innerWidth, window.innerHeight);
-
-// Set a near white clear color (default is black)
-renderer.setClearColor(0xfff6e6);
-
-// Append to the document
-document.body.appendChild(renderer.domElement);
-
+var renderer= null;
+//size of the grid
 var size = 20;
+//divisions of the grid
 var divisions = 20;
+//snake object
+var snake= null;
+//mouse control object
+var controls = null;
 
-var gridHelper = new THREE.GridHelper(size, divisions);
-scene.add(gridHelper);
+function init(){
+    scene = new THREE.Scene();
 
-var snake = new Snake(scene);
+    camera = new THREE.PerspectiveCamera(
+        100,                                   // Field of view
+        window.innerWidth / window.innerHeight, // Aspect ratio
+        0.1,                                  // Near clipping pane
+        1000                                  // Far clipping pane
+    );
+
+
+    // Reposition the camera
+    camera.position.set(12, 12, 0);
+    // Point the camera at a given coordinate
+    camera.lookAt(new THREE.Vector3(0, 0, 0));
+
+    renderer = new THREE.WebGLRenderer({antialias: true});
+
+    // Size should be the same as the window
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+    // Set a near white clear color (default is black)
+        renderer.setClearColor(0xfff6e6);
+
+    // Append to the document
+        document.body.appendChild(renderer.domElement);
+
+
+    var gridHelper = new THREE.GridHelper(size, divisions);
+    scene.add(gridHelper);
+
+     snake = new Snake(scene);
+
+
+    gridGround();
+
+    //add light
+    var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
+    scene.add(ambientLight);
+
+
+// Render the scene/camera combination
+    renderer.render(scene, camera);
+
+// Add an orbit control which allows us to move around the scene. See the three.js example for more details
+// https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.
+     controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.addEventListener('change', function () {
+        renderer.render(scene, camera);
+    }); // add this only if there is no animation loop (requestAnimationFrame)
+
+}
+
+init();
+
+
+//custom mesh cube water effect
+
 
 var uniforms = {
     delta: {value: 0}
@@ -67,24 +104,14 @@ for (var i = 0; i < displacement.length; i++) {
 
 geometry.addAttribute('displacement', new THREE.BufferAttribute(displacement, 1));
 
+//end water effect cube
 
 
-//grid border cubes
+/**
+ * fill the grid ground and the borders
+ */
+function gridGround(){
 
-// var cubeGeom = new THREE.BoxGeometry(1, 1, 1);
-// var cubeMaterials = [
-//     new THREE.MeshPhongMaterial({color: "red"}),     // for the +x face
-//     new THREE.MeshPhongMaterial({color: "cyan"}),    // for the -x face
-//     new THREE.MeshPhongMaterial({color: "green"}),   // for the +y face
-//     new THREE.MeshPhongMaterial({color: "magenta"}), // for the -y face
-//     new THREE.MeshPhongMaterial({color: "blue"}),    // for the +z face
-//     new THREE.MeshPhongMaterial({color: "yellow"})   // for the -z face
-// ];
-// var cube = new THREE.Mesh(cubeGeom, cubeMaterials);
-// cube.position.x += 9.5;
-// cube.position.z -= 9.5;
-// cube.position.y -= 0.5;
-// scene.add(cube);
 
 var cubeX = 9.5;
 var cubeY = 0.5;
@@ -116,62 +143,10 @@ for (var ii = 0; ii < size; ii++) {
      cubez++;
 
 }
-
+}
 //end grid borders cubes
 
 
-
-
-/*
-//custom verticies - mesh
-var geom = new THREE.Geometry();
-var v1 = new THREE.Vector3(0,0,0);
-var v2 = new THREE.Vector3(0,50,0);
-var v3 = new THREE.Vector3(0,50,50);
-
-geom.vertices.push(v1);
-geom.vertices.push(v2);
-geom.vertices.push(v3);
-
-geom.faces.push( new THREE.Face3( 0, 1, 2 ) );
-geom.computeFaceNormals();
-
-var object = new THREE.Mesh( geom, new THREE.MeshNormalMaterial() );
-
-object.position.z = -100;//move a bit back - size of 500 is a bit big
-object.rotation.y = -Math.PI * .5;//triangle is pointing in depth, rotate it -90 degrees on Y
-
-scene.add(object);
-
-*/
-
-/*
-var geometry = new THREE.OctahedronGeometry(1,1);
-var material = new THREE.MeshStandardMaterial( {
-    color: 0xff0051,
-    shading: THREE.FlatShading, // default is THREE.SmoothShading
-    metalness: 0,
-    roughness: 1
-} );
-var shapeOne = new THREE.Mesh(geometry, material);
-shapeOne.position.y += 1;
-
-scene.add(shapeOne);*/
-
-//add light
-var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
-scene.add(ambientLight);
-
-
-// Render the scene/camera combination
-renderer.render(scene, camera);
-
-// Add an orbit control which allows us to move around the scene. See the three.js example for more details
-// https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.
-var controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.addEventListener('change', function () {
-    renderer.render(scene, camera);
-}); // add this only if there is no animation loop (requestAnimationFrame)
 
 
 function moving() {
@@ -216,9 +191,9 @@ function generatePoints(){
     }
 
     //diamond shaped custom shader for the points gaining
-    var pyramid = new THREE.Geometry();
+    var diamond = new THREE.Geometry();
 
-    pyramid.vertices = [
+    diamond.vertices = [
         new THREE.Vector3(1, 0, 1),
         new THREE.Vector3(1, 0, -1),
         new THREE.Vector3(-1, 0, -1),
@@ -226,7 +201,7 @@ function generatePoints(){
         new THREE.Vector3(0, 1, 0)
     ];
 
-    pyramid.faces = [
+    diamond.faces = [
         new THREE.Face3(3, 2, 1),
         new THREE.Face3(3, 1, 0),
         new THREE.Face3(3, 0, 4),
@@ -236,9 +211,9 @@ function generatePoints(){
     ];
 
 
-    pyramid.computeFaceNormals();
+    diamond.computeFaceNormals();
 
-    var object = new THREE.Mesh(pyramid, material);
+    var object = new THREE.Mesh(diamond, material);
 
     object.rotation.x = -Math.PI * 1.0;
     object.position.y = 2.0;
@@ -271,6 +246,25 @@ async function demo() {
 demo();
 
 
+/**
+ * clear the scene and delete old canvas
+ */
+function clearScene() {
+    var to_remove = [];
+
+    scene.traverse ( function( child ) {
+        if ( child instanceof THREE.Mesh && !child.userData.keepMe === true ) {
+            to_remove.push( child );
+        }
+    } );
+
+    for (var i = 0; i < to_remove.length; i++)
+        scene.remove( to_remove[i] );
+
+    $("canvas").each(function(){
+       $(this).remove();
+    });
+}
 
 moving();
 
@@ -280,8 +274,10 @@ requestAnimationFrame(render);
 
 function render() {
 
-    snake.checkBorders(); //check if snake out of the borders
-
+   if( snake.checkBorders()) {
+       clearScene();
+       init();
+   }
     //update point cube
     delta += 0.13;
     meshPoint.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;
