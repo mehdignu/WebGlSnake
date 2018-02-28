@@ -17,8 +17,13 @@ var controls = null;
 var pointX = null;
 var pointZ = null;
 
-var score = 0;
 
+var gui = new dat.GUI({
+    height : 5 * 32 - 1
+});
+var params = {
+    score: 0
+};
 
 
 function init(){
@@ -71,6 +76,8 @@ function init(){
     controls.addEventListener('change', function () {
         renderer.render(scene, camera);
     }); // add this only if there is no animation loop (requestAnimationFrame)
+    gui.add(params, 'score').name('Score').listen();
+
 
 }
 
@@ -163,10 +170,11 @@ function moving() {
 
     function onDocumentKeyDown(event) {
 
+
+
         if(snake.checkPoint(pointX, pointZ)) {
             if (scene.getObjectByName('tmpPoint')) {
-                score++;
-                console.log(score);
+              params.score++;
                 var selectedObject = scene.getObjectByName('tmpPoint');
                 scene.remove(selectedObject);
 
@@ -189,6 +197,8 @@ function moving() {
         }
     };
 }
+
+
 
 /**
  * generate random numbers
