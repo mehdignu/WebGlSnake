@@ -1,7 +1,6 @@
 function Snake(scene) {
-
     this.scene = scene;
-    this.size = 6; //should to be size +1
+    this.size = 3; //should to be size +1
     this.cubes = [this.size];
     this.cubesLeft = [this.size];
     this.cubesForward = [this.size];
@@ -112,7 +111,7 @@ function Snake(scene) {
      */
     this.moveRight = function right() {
 
-        if ((this.lock.isLocked === 0 || this.lock.direc === "right")  && this.direction !== "left") {
+        if ((this.lock.isLocked === 0 || this.lock.direc === "right") && this.direction !== "left") {
 
             if (this.direction === 'right') {
 
@@ -362,12 +361,34 @@ function Snake(scene) {
      */
     this.checkBorders = function () {
 
-        if(this.cubes[1].position.x > 8.5 || this.cubes[1].position.x < -8.5 || this.cubes[1].position.z > 8.5 || this.cubes[1].position.z < -8.5) {
+        if (this.cubes[1].position.x > 8.5 || this.cubes[1].position.x < -8.5 || this.cubes[1].position.z > 8.5 || this.cubes[1].position.z < -8.5) {
             return true;
         }
     };
 
+    /**
+     * check if snake ate the diamond
+     * @param pointX
+     * @param pointZ
+     */
+    this.checkPoint = function (pointX, pointZ) {
 
+        // console.log(this.cubes[1].position.x + ' ' + pointX);
+        if (pointX !== null && pointZ !== null) {
+
+            pointXmax = pointX + 1;
+            pointXmin = pointX - 1;
+
+            pointZmax = pointZ + 1;
+            pointZmin = pointZ - 1;
+
+            if ((this.cubes[1].position.x >= pointXmin && this.cubes[1].position.x <= pointXmax) && (this.cubes[1].position.z >= pointZmin && this.cubes[1].position.z <= pointZmax)) {
+
+                return true;
+            }
+
+        }
+    };
 
 
     //end of snake

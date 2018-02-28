@@ -13,6 +13,14 @@ var snake= null;
 //mouse control object
 var controls = null;
 
+//position of the new cube of point
+var pointX = null;
+var pointZ = null;
+
+var score = 0;
+
+
+
 function init(){
     scene = new THREE.Scene();
 
@@ -154,6 +162,18 @@ function moving() {
     document.addEventListener("keydown", onDocumentKeyDown, false);
 
     function onDocumentKeyDown(event) {
+
+        if(snake.checkPoint(pointX, pointZ)) {
+            if (scene.getObjectByName('tmpPoint')) {
+                score++;
+                console.log(score);
+                var selectedObject = scene.getObjectByName('tmpPoint');
+                scene.remove(selectedObject);
+
+            }
+        }
+
+
         var keyCode = event.which;
         if (keyCode == 87) { //W
             snake.moveUp();
@@ -182,6 +202,7 @@ function getRandomInt(min, max) {
 
 /**
  * generate the points diamonds
+ * custom shaped diamond from custom created vertices
  */
 function generatePoints(){
 
@@ -221,8 +242,8 @@ function generatePoints(){
     object.position.x = getRandomInt(-8.0, 8.0);
     object.position.z = getRandomInt(-8.5, 8.5);
 
-
-
+    pointX = object.position.x;
+    pointZ = object.position.z;
 
     object.name ='tmpPoint';
     scene.add(object);
@@ -234,17 +255,17 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function demo() {
+async function generatorDelay() {
 
 
-    await sleep(5000);
+    await sleep(4000);
 
     generatePoints();
-    demo();
+    generatorDelay();
+
 }
 
-demo();
-
+generatorDelay();
 
 /**
  * clear the scene and delete old canvas
@@ -278,6 +299,9 @@ function render() {
        clearScene();
        init();
    }
+
+
+
     //update point cube
     delta += 0.13;
     meshPoint.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;
