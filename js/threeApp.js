@@ -21,12 +21,12 @@ var gui = new dat.GUI({
     height : 5 * 32 - 1
 });
 
-
+//lock for the levels
 var levelUp = 0;
 
 var params = {
     score: 0,
-    level: 1
+    level: 2
 };
 gui.add(params, 'score').name('Score').listen();
 gui.add(params, 'level').name('Level').listen();
@@ -192,6 +192,8 @@ function fillWater() {
     meshOfWater.position.y = -100;
     scene.add(meshOfWater);
 
+    //drawnDaSnake(meshOfWater);
+
     //attribute
     displacementOfWater = new Float32Array(geometry.attributes.position.count);
 
@@ -213,6 +215,9 @@ if(params.level===2) {
 }
 
 
+/**
+ * Controlling the Snake movement
+ */
 function moving() {
 
     document.addEventListener("keydown", onDocumentKeyDown, false);
@@ -363,7 +368,6 @@ function render() {
        levelUp++;
    }
 
-
     delta += 0.13;
 
     //when the player comes to level 2 fill with water
@@ -384,6 +388,12 @@ function render() {
            displacementOfWater[i] = 0.5 + Math.sin(i + delta) * 0.25;
        }
        meshOfWater.geometry.attributes.displacementOfWater.needsUpdate = true;
+
+        //drawn the Snake in water
+       if(meshOfWater.position.y<-86){
+           meshOfWater.position.y += 0.005;
+       }
+
        //end update Water movement
    }
 
