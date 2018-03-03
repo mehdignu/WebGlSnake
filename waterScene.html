@@ -14,50 +14,9 @@
         integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
         crossorigin="anonymous"></script>
 
-<script type="x-shader/x-vertex" id="vertexShaderPoint">
+<script type="x-shader/x-vertex" id="vertexShader">
 
 attribute float displacement;
-uniform float delta;
-varying float vOpacity;
-varying vec3 vUv;
-void main() {
-
-
-    vUv = position;
-    vOpacity = displacement;
-
-    vec3 p = position;
-
-    p.x += sin(displacement) * 0.5;
-
-    p.y += 0.5;
-    p.y += sin(displacement) * 0.5;
- 	vec4 modelViewPosition = modelViewMatrix * vec4(p, 1.0);
-	gl_Position = projectionMatrix * modelViewPosition;
-}
-
-</script>
-
-<script type="x-shader/x-fragment" id="fragmentShaderPoint">
-
-uniform float delta;
-varying float vOpacity;
-varying vec3 vUv;
-    void main(){
-    float r = 0.0;
-    float g = 0.5 + sin(delta);
-    float b = 1.0 + cos(vUv.x * delta);
-        gl_FragColor = vec4(r, g, b, vOpacity);
-    }
-
-</script>
-
-
-
-
-<script type="x-shader/x-vertex" id="vertexShaderWater">
-
-attribute float displacementOfWater;
 uniform float delta;
 varying float vOpacity;
 varying vec3 vUv;
@@ -65,12 +24,12 @@ varying vec3 vUv;
 void main()
 {
     vUv = position;
-    vOpacity = displacementOfWater;
+    vOpacity = displacement;
 
     vec3 p = position;
 
-    p.x += sin(displacementOfWater) * 50.0;
-    p.y += cos(displacementOfWater) * 50.0;
+    p.x += sin(displacement) * 50.0;
+    p.y += cos(displacement) * 50.0;
 
 	vec4 modelViewPosition = modelViewMatrix * vec4(p, 1.0);
 	gl_Position = projectionMatrix * modelViewPosition;
@@ -78,7 +37,7 @@ void main()
 
 </script>
 
-<script type="x-shader/x-fragment" id="fragmentShaderWater">
+<script type="x-shader/x-fragment" id="fragmentShader">
 
 uniform float delta;
 varying float vOpacity;
@@ -96,7 +55,7 @@ varying vec3 vUv;
 <script src="js/Snake.js"></script>
 <script src="js/three.js"></script>
 <script src="js/OrbitControls.js"></script>
-<script src="js/threeApp.js"></script>
+<script src="js/waterScene.js"></script>
 
 </body>
 </html>

@@ -16,21 +16,24 @@ var controls = null;
 //position of the new cube of point
 var pointX = null;
 var pointZ = null;
+var uniforms = null;
 
 var gui = new dat.GUI({
     height : 5 * 32 - 1
 });
-
-
-var levelUp = 0;
-
+var xxx = null;
+var meshPoint = null;
 var params = {
-    score: 0,
-    level: 1
+    score: 0
 };
-gui.add(params, 'score').name('Score').listen();
-gui.add(params, 'level').name('Level').listen();
+var m = [];
+var k =[];
 
+var material = null;
+var displacement = null;
+
+
+var mesh = null;
 
 function init(){
     scene = new THREE.Scene();
@@ -63,7 +66,7 @@ function init(){
     var gridHelper = new THREE.GridHelper(size, divisions);
     scene.add(gridHelper);
 
-     snake = new Snake(scene);
+    // snake = new Snake(scene);
 
 
     gridGround();
@@ -73,55 +76,24 @@ function init(){
     scene.add(ambientLight);
 
 
-    // Render the scene/camera combination
+// Render the scene/camera combination
     renderer.render(scene, camera);
 
-    // Add an orbit control which allows us to move around the scene. See the three.js example for more details
-    // https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.
+// Add an orbit control which allows us to move around the scene. See the three.js example for more details
+// https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.
      controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', function () {
         renderer.render(scene, camera);
     }); // add this only if there is no animation loop (requestAnimationFrame)
+    gui.add(params, 'score').name('Score').listen();
 
-    params.score = 0;
 
 }
+
 init();
 
 
-//custom mesh cube water effect
 
-
-var uniforms = {
-    delta: {value: 0}
-};
-
-//custom shader for the speed accelerating cube
-var material = new THREE.ShaderMaterial({
-    uniforms: uniforms,
-    vertexShader: document.getElementById('vertexShaderPoint').textContent,
-    fragmentShader: document.getElementById('fragmentShaderPoint').textContent
-});
-
-
-
-var geometry = new THREE.BoxBufferGeometry(1, 1, 1);
-var meshPoint = new THREE.Mesh(geometry, material);
-meshPoint.y += 0.5;
-//scene.add(meshPoint);
-
-
-//attribute
-var displacement = new Float32Array(geometry.attributes.position.count);
-
-for (var i = 0; i < displacement.length; i++) {
-    displacement[i] = Math.sin(i);
-}
-
-
-geometry.addAttribute('displacement', new THREE.BufferAttribute(displacement, 1));
-
-//end water effect cube
 
 
 /**
@@ -165,53 +137,6 @@ for (var ii = 0; ii < size; ii++) {
 
 
 
-var displacementOfWater = null;
-var materialOfWater = null;
-var meshOfWater = null;
-
-function fillWater() {
-    //custom mesh cube water effect
-
-
-    uniformsOfWater = {
-        delta: {value: 0}
-    };
-
-    //custom shader for the speed accelerating cube
-    materialOfWater = new THREE.ShaderMaterial({
-        uniforms: uniformsOfWater,
-        vertexShader: document.getElementById('vertexShaderWater').textContent,
-        fragmentShader: document.getElementById('fragmentShaderWater').textContent
-    });
-
-
-    var geometry = new THREE.BoxBufferGeometry(100, 100, 100, 10, 10, 10);
-    meshOfWater = new THREE.Mesh(geometry, materialOfWater);
-    meshOfWater.position.z = -10;
-    meshOfWater.position.x = -10;
-    meshOfWater.position.y = -100;
-    scene.add(meshOfWater);
-
-    //attribute
-    displacementOfWater = new Float32Array(geometry.attributes.position.count);
-
-    for (var j = 0; j < displacementOfWater.length; j++) {
-        displacementOfWater[j] = Math.sin(j);
-    }
-
-
-    geometry.addAttribute('displacementOfWater', new THREE.BufferAttribute(displacementOfWater, 1));
-
-
-
-//end water effect cube
-
-
-}
-if(params.level===2) {
-    fillWater();
-}
-
 
 function moving() {
 
@@ -219,14 +144,14 @@ function moving() {
 
     function onDocumentKeyDown(event) {
 
-        if(snake.checkPoint(pointX, pointZ)) {
-            if (scene.getObjectByName('tmpPoint')) {
-              params.score++;
-                var selectedObject = scene.getObjectByName('tmpPoint');
-                scene.remove(selectedObject);
-
-            }
-        }
+        // if(snake.checkPoint(pointX, pointZ)) {
+        //     if (scene.getObjectByName('tmpPoint')) {
+        //       params.score++;
+        //         var selectedObject = scene.getObjectByName('tmpPoint');
+        //         scene.remove(selectedObject);
+        //
+        //     }
+        // }
 
 
         var keyCode = event.which;
@@ -246,6 +171,47 @@ function moving() {
 }
 
 
+function fillWater() {
+    //custom mesh cube water effect
+
+
+    uniforms = {
+        delta: {value: 0}
+    };
+
+    //custom shader for the speed accelerating cube
+    material = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: document.getElementById('vertexShader').textContent,
+        fragmentShader: document.getElementById('fragmentShader').textContent
+    });
+
+
+    var geometry = new THREE.BoxBufferGeometry(100, 100, 100, 10, 10, 10);
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.z = -10;
+    mesh.position.x = -10;
+    mesh.position.y = -100;
+    scene.add(mesh);
+
+//attribute
+     displacement = new Float32Array(geometry.attributes.position.count);
+
+    for (var j = 0; j < displacement.length; j++) {
+        displacement[j] = Math.sin(j);
+    }
+
+
+    geometry.addAttribute('displacement', new THREE.BufferAttribute(displacement, 1));
+
+
+
+//end water effect cube
+
+
+}
+
+fillWater();
 
 /**
  * generate random numbers
@@ -322,7 +288,7 @@ async function generatorDelay() {
 
 }
 
-generatorDelay();
+//generatorDelay();
 
 /**
  * clear the scene and delete old canvas
@@ -346,53 +312,34 @@ function clearScene() {
 
 moving();
 
+
+
+
+
 var delta = 0;
 
 requestAnimationFrame(render);
-
 function render() {
 
-   if( snake.checkBorders()) {
-       clearScene();
-       init();
-   }
-
-   if(params.score === 4){
-       params.score = 0;
-       params.level++;
-       levelUp++;
-   }
+   // if( snake.checkBorders()) {
+   //     clearScene();
+   //     init();
+   // }
 
 
-    delta += 0.13;
-
-    //when the player comes to level 2 fill with water
-   if(params.level===2) {
-
-       if(levelUp===1){
-           clearScene();
-           init();
-           fillWater();
-           levelUp=0;
-       }
-
-       //update Water movement
-       meshOfWater.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;
-
-       //attribute
-       for (var i = 0; i < displacementOfWater.length; i++) {
-           displacementOfWater[i] = 0.5 + Math.sin(i + delta) * 0.25;
-       }
-       meshOfWater.geometry.attributes.displacementOfWater.needsUpdate = true;
-       //end update Water movement
-   }
 
     //update point cube
-    meshPoint.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;
-    for (var i = 0; i < displacement.length; i++) {
+    delta += 0.13;
+
+    mesh.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;
+
+    //attribute
+    for (var i = 0; i < displacement.length; i ++) {
         displacement[i] = 0.5 + Math.sin(i + delta) * 0.25;
     }
-    meshPoint.geometry.attributes.displacement.needsUpdate = true;
+    mesh.geometry.attributes.displacement.needsUpdate = true;
+
+
     //end update point cube
 
 
