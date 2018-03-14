@@ -2,6 +2,9 @@
 var scene = null;
 // Create and position a camera
 var camera= null;
+//poly enemy
+var poly = null;
+
 // Create a renderer
 var renderer= null;
 //size of the grid
@@ -26,7 +29,7 @@ var levelUp = 0;
 
 var params = {
     score: 0,
-    level: 2
+    level: 3
 };
 gui.add(params, 'score').name('Score').listen();
 gui.add(params, 'level').name('Level').listen();
@@ -67,6 +70,17 @@ function init(){
 
 
     gridGround();
+
+    if(params.level === 3){
+        poly = new BadPoly(scene);
+    }
+
+    // var geometry = new THREE.BoxGeometry( 20, 20, 20 );
+    // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+    // var cube = new THREE.Mesh( geometry, material );
+    // cube.position.y -= 10;
+    // scene.add( cube );
+
 
     //add light
     var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
@@ -170,12 +184,15 @@ var materialOfWater = null;
 var meshOfWater = null;
 
 function fillWater() {
+
     //custom mesh cube water effect
 
 
     uniformsOfWater = {
-        delta: {value: 0}
+        delta: {value: 0},
     };
+
+
 
     //custom shader for the speed accelerating cube
     materialOfWater = new THREE.ShaderMaterial({
@@ -183,7 +200,6 @@ function fillWater() {
         vertexShader: document.getElementById('vertexShaderWater').textContent,
         fragmentShader: document.getElementById('fragmentShaderWater').textContent
     });
-
 
     var geometry = new THREE.BoxBufferGeometry(100, 100, 100, 10, 10, 10);
     meshOfWater = new THREE.Mesh(geometry, materialOfWater);
@@ -243,8 +259,8 @@ function moving() {
             snake.moveLeft();
         } else if (keyCode == 68) {//D
             snake.moveRight();
-            // cube.position.x += xSpeed;
         } else if (keyCode == 32) {
+            poly.move();
 
         }
     };
@@ -327,7 +343,8 @@ async function generatorDelay() {
 
 }
 
-generatorDelay();
+//generate the points after some time
+//generatorDelay();
 
 /**
  * clear the scene and delete old canvas
@@ -396,6 +413,19 @@ function render() {
 
        //end update Water movement
    }
+
+
+
+
+    if(params.level===3) {
+
+        if (levelUp === 1) {
+            clearScene();
+            init();
+            levelUp = 0;
+        }
+
+    }
 
     //update point cube
     meshPoint.material.uniforms.delta.value = 0.5 + Math.sin(delta) * 0.5;

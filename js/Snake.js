@@ -12,8 +12,26 @@ function Snake(scene) {
     this.direction = "forward";
 
     for (var i = 0; i < this.size - 1; i++) {
+
+       // var texture = new THREE.TextureLoader().load( 'SnakeSkin.jpg' );
+
+      //  var material = new THREE.MeshBasicMaterial( { map: texture } );
+
+        var light = new THREE.DirectionalLight( 0xffffff );
+        light.position.set( 0, 1, 1 ).normalize();
+        this.scene.add(light);
+
+        var material = [
+            new THREE.MeshPhongMaterial({ color: "#7D2906", specular: 0x555555, shininess: 30}),     // for the +x face
+            new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the -x face
+            new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),   // for the +y face
+            new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}), // for the -y face
+            new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the +z face
+            new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30})   // for the -z face
+        ];
+
         var geometry = new THREE.BoxGeometry(1, 1, 1);
-        var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+     //   var material = new THREE.MeshBasicMaterial({color: 0xff0051});
         var cube = new THREE.Mesh(geometry, material);
         cube.position.x += 1.0 * i;
         cube.position.y += 0.5;
@@ -32,9 +50,7 @@ function Snake(scene) {
             if (this.direction === 'forward') {
 
                 for (var j = 1; j < this.cubes.length; j++) {
-
-                    this.cubes[j].position.x -= this.speed;
-
+                        this.cubes[j].position.x -= this.speed;
                 }
 
             } else {
@@ -48,7 +64,18 @@ function Snake(scene) {
                     vector.setFromMatrixPosition(this.cubes[1].matrixWorld);
 
                     var geometry = new THREE.BoxGeometry(1, 1, 1);
-                    var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+                  //  var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+
+                    var material = [
+                        new THREE.MeshPhongMaterial({ color: "#7D2906", specular: 0x555555, shininess: 30}),     // for the +x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the -x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),   // for the +y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}), // for the -y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the +z face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30})   // for the -z face
+                    ];
+
+
                     tmpCubeForward = new THREE.Mesh(geometry, material);
                     tmpCubeForward.position.x = vector.x;
                     tmpCubeForward.position.y = vector.y;
@@ -135,7 +162,17 @@ function Snake(scene) {
                     vector.setFromMatrixPosition(this.cubes[1].matrixWorld);
 
                     var geometry = new THREE.BoxGeometry(1, 1, 1);
-                    var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+                 //   var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+
+                    var material = [
+                        new THREE.MeshPhongMaterial({ color: "#7D2906", specular: 0x555555, shininess: 30}),     // for the +x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the -x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),   // for the +y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}), // for the -y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the +z face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30})   // for the -z face
+                    ];
+
                     tmpCubeForward = new THREE.Mesh(geometry, material);
                     tmpCubeForward.position.x = vector.x;
                     tmpCubeForward.position.y = vector.y;
@@ -215,7 +252,17 @@ function Snake(scene) {
                     vector.setFromMatrixPosition(this.cubes[1].matrixWorld);
 
                     var geometry = new THREE.BoxGeometry(1, 1, 1);
-                    var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+                //    var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+
+                    var material = [
+                        new THREE.MeshPhongMaterial({ color: "#7D2906", specular: 0x555555, shininess: 30}),     // for the +x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the -x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),   // for the +y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}), // for the -y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the +z face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30})   // for the -z face
+                    ];
+
                     tmpCube = new THREE.Mesh(geometry, material);
                     tmpCube.position.x = this.cubes[1].position.x;
                     tmpCube.position.y = this.cubes[1].position.y;
@@ -298,7 +345,17 @@ function Snake(scene) {
                     vector.setFromMatrixPosition(this.cubes[1].matrixWorld);
 
                     var geometry = new THREE.BoxGeometry(1, 1, 1);
-                    var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+                 //   var material = new THREE.MeshBasicMaterial({color: 0xff0051});
+
+                    var material = [
+                        new THREE.MeshPhongMaterial({ color: "#7D2906", specular: 0x555555, shininess: 30}),     // for the +x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the -x face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),   // for the +y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}), // for the -y face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30}),    // for the +z face
+                        new THREE.MeshPhongMaterial({color: "#7D2906", shininess: 30})   // for the -z face
+                    ];
+
                     tmpCubeForward = new THREE.Mesh(geometry, material);
                     tmpCubeForward.position.x = vector.x;
                     tmpCubeForward.position.y = vector.y;
