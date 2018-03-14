@@ -133,18 +133,6 @@ function BadPoly(scene) {
     }
 
 
-
-    /**
-     * check if the snake out of the borders
-     * @returns {boolean}
-     */
-    this.checkBorders = function () {
-
-        if (this.cubes[1].position.x > 8.5 || this.cubes[1].position.x < -8.5 || this.cubes[1].position.z > 8.5 || this.cubes[1].position.z < -8.5) {
-            return true;
-        }
-    };
-
     /**
      * check if snake ate the diamond
      * @param pointX
