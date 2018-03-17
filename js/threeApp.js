@@ -19,6 +19,7 @@ var controls = null;
 //position of the new cube of point
 var pointX = null;
 var pointZ = null;
+var downloadTimer=null;
 
 var gui = new dat.GUI({
     height : 5 * 32 - 1
@@ -32,14 +33,30 @@ var params = {
     level: 1,
     time: 30
 };
+
+var restart = { restart:function(){
+        clearInterval(downloadTimer);
+
+        params.level = 1;
+    params.time = 30;
+    params.score = 0;
+    clearScene();
+    init();
+
+}};
+
+
 gui.add(params, 'score').name('Score').listen();
 gui.add(params, 'level').name('Level').listen();
 gui.add(params, 'time').name('Time left').listen();
-
+gui.add(restart,'restart');
 
 function init(){
+
+    //set up the scene object
     scene = new THREE.Scene();
 
+    //setting up the camera
     camera = new THREE.PerspectiveCamera(
         100,                                   // Field of view
         window.innerWidth / window.innerHeight, // Aspect ratio
@@ -70,20 +87,13 @@ function init(){
 
      snake = new Snake(scene);
 
-    countdown();
+     refreshIntervalId = countdown();
 
     gridGround();
 
     if(params.level === 3){
         poly = new BadPoly(scene);
     }
-
-    // var geometry = new THREE.BoxGeometry( 20, 20, 20 );
-    // var material = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-    // var cube = new THREE.Mesh( geometry, material );
-    // cube.position.y -= 10;
-    // scene.add( cube );
-
 
     //add light
     var ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
@@ -93,12 +103,11 @@ function init(){
     // Render the scene/camera combination
     renderer.render(scene, camera);
 
-    // Add an orbit control which allows us to move around the scene. See the three.js example for more details
-    // https://github.com/mrdoob/three.js/blob/dev/examples/js/controls/OrbitControls.
+    // Add an orbit control which allows us to move around the scene.
      controls = new THREE.OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', function () {
         renderer.render(scene, camera);
-    }); // add this only if there is no animation loop (requestAnimationFrame)
+    });
 
     params.score = 0;
     params.time = 30;
@@ -107,7 +116,6 @@ function init(){
 init();
 
 
-//custom mesh cube water effect
 
 
 var uniforms = {
@@ -336,7 +344,7 @@ function generatePoints(){
 
 function countdown(){
     var timeleft = 30;
-    var downloadTimer = setInterval(function(){
+     downloadTimer = setInterval(function(){
         timeleft--;
         params.time = timeleft;
         if(timeleft <= 0)
@@ -392,11 +400,13 @@ requestAnimationFrame(render);
 function render() {
 
    if( snake.checkBorders() || params.time===0) {
+       clearInterval(downloadTimer);
        clearScene();
        init();
    }
 
    if(params.score === 4){
+       clearInterval(downloadTimer);
        params.score = 0;
        params.time = 30;
        params.level++;
@@ -409,6 +419,7 @@ function render() {
    if(params.level===2) {
 
        if(levelUp===1){
+           clearInterval(downloadTimer);
            clearScene();
            init();
            fillWater();
@@ -438,6 +449,7 @@ function render() {
     if(params.level===3) {
 
         if (levelUp === 1) {
+            clearInterval(downloadTimer);
             clearScene();
             init();
             levelUp = 0;
