@@ -30,7 +30,7 @@ var levelUp = 0;
 
 var params = {
     score: 0,
-    level: 1,
+    level: 3,
     time: 30
 };
 
@@ -53,6 +53,9 @@ gui.add(restart,'restart');
 
 function init(){
 
+
+
+
     //set up the scene object
     scene = new THREE.Scene();
 
@@ -63,7 +66,6 @@ function init(){
         0.1,                                  // Near clipping pane
         1000                                  // Far clipping pane
     );
-
 
     // Reposition the camera
     camera.position.set(12, 12, 0);
@@ -87,12 +89,13 @@ function init(){
 
      snake = new Snake(scene);
 
+     //Timer of the Game
      refreshIntervalId = countdown();
 
     gridGround();
 
     if(params.level === 3){
-        poly = new BadPoly(scene);
+        poly = new BadPoly(scene, snake);
     }
 
     //add light
@@ -404,6 +407,13 @@ function render() {
        clearScene();
        init();
    }
+
+    //check if the Snake is attacked by the bad poly
+    if(poly.checkPoint()){
+        clearInterval(downloadTimer);
+        clearScene();
+        init();
+    }
 
    if(params.score === 4){
        clearInterval(downloadTimer);

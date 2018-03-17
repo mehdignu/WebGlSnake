@@ -1,6 +1,7 @@
-function BadPoly(scene) {
+function BadPoly(scene, snake) {
     this.scene = scene;
     this.size = 4;
+    this.snake = snake;
 
     this.polys = [4];
     var k = [4];
@@ -14,11 +15,11 @@ function BadPoly(scene) {
 
         var material = [
             new THREE.MeshPhongMaterial({ color: "#910CE8", specular: 0x555555, shininess: 30}),     // for the +x face
-            new THREE.MeshPhongMaterial({color: "#910CE8", shininess: 30}),    // for the -x face
-            new THREE.MeshPhongMaterial({color: "#910CE8", shininess: 30}),   // for the +y face
-            new THREE.MeshPhongMaterial({color: "#910CE8", shininess: 30}), // for the -y face
-            new THREE.MeshPhongMaterial({color: "#910CE8", shininess: 30}),    // for the +z face
-            new THREE.MeshPhongMaterial({color: "#910CE8", shininess: 30})   // for the -z face
+            new THREE.MeshPhongMaterial({color: "#910CE8", specular: 0x555555,shininess: 30}),    // for the -x face
+            new THREE.MeshPhongMaterial({color: "#910CE8", specular: 0x555555,shininess: 30}),   // for the +y face
+            new THREE.MeshPhongMaterial({color: "#910CE8", specular: 0x555555,shininess: 30}), // for the -y face
+            new THREE.MeshPhongMaterial({color: "#910CE8", specular: 0x555555,shininess: 30}),    // for the +z face
+            new THREE.MeshPhongMaterial({color: "#910CE8", specular: 0x555555,shininess: 30})   // for the -z face
         ];
 
         var verticesOfCube = [
@@ -138,25 +139,27 @@ function BadPoly(scene) {
      * @param pointX
      * @param pointZ
      */
-    this.checkPoint = function (pointX, pointZ) {
+    this.checkPoint = function () {
 
-        // console.log(this.cubes[1].position.x + ' ' + pointX);
-        if (pointX !== null && pointZ !== null) {
 
-            pointXmax = pointX + 1;
-            pointXmin = pointX - 1;
+        for(var i =1; i<=4;i++) {
 
-            pointZmax = pointZ + 1;
-            pointZmin = pointZ - 1;
+            pointXmax = k[i].position.x + 1;
+            pointXmin = k[i].position.x - 1;
 
-            if ((this.cubes[1].position.x >= pointXmin && this.cubes[1].position.x <= pointXmax) && (this.cubes[1].position.z >= pointZmin && this.cubes[1].position.z <= pointZmax)) {
+            pointZmax = k[i].position.z + 1;
+            pointZmin = k[i].position.z - 1;
+
+            if ((this.snake.cubes[1].position.x >= pointXmin && this.snake.cubes[1].position.x <= pointXmax) && (this.snake.cubes[1].position.z >= pointZmin && this.snake.cubes[1].position.z <= pointZmax)) {
 
                 return true;
             }
 
         }
+
+
     };
 
 
-    //end of snake
+
 }
