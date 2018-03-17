@@ -29,10 +29,12 @@ var levelUp = 0;
 
 var params = {
     score: 0,
-    level: 3
+    level: 1,
+    time: 30
 };
 gui.add(params, 'score').name('Score').listen();
 gui.add(params, 'level').name('Level').listen();
+gui.add(params, 'time').name('Time left').listen();
 
 
 function init(){
@@ -68,6 +70,7 @@ function init(){
 
      snake = new Snake(scene);
 
+    countdown();
 
     gridGround();
 
@@ -98,6 +101,7 @@ function init(){
     }); // add this only if there is no animation loop (requestAnimationFrame)
 
     params.score = 0;
+    params.time = 30;
 
 }
 init();
@@ -329,6 +333,19 @@ function generatePoints(){
 //end diamond
 }
 
+
+function countdown(){
+    var timeleft = 30;
+    var downloadTimer = setInterval(function(){
+        timeleft--;
+        params.time = timeleft;
+        if(timeleft <= 0)
+            clearInterval(downloadTimer);
+    },1000);
+}
+
+
+
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -344,7 +361,7 @@ async function generatorDelay() {
 }
 
 //generate the points after some time
-//generatorDelay();
+generatorDelay();
 
 /**
  * clear the scene and delete old canvas
@@ -374,13 +391,14 @@ requestAnimationFrame(render);
 
 function render() {
 
-   if( snake.checkBorders()) {
+   if( snake.checkBorders() || params.time===0) {
        clearScene();
        init();
    }
 
    if(params.score === 4){
        params.score = 0;
+       params.time = 30;
        params.level++;
        levelUp++;
    }
