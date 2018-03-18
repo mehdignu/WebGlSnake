@@ -1,5 +1,5 @@
 /*
-        Polynoms that the Snake encounters in Level3
+        Polyhedron that the Snake encounters in Level3
         Copyright (C) 2018  Mehdi Dridi
 */
 
