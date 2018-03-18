@@ -1,3 +1,8 @@
+/*
+        Snake Body
+        Copyright (C) 2018  Mehdi Dridi
+*/
+
 function Snake(scene) {
     this.scene = scene;
     this.size = 3; //should to be size +1

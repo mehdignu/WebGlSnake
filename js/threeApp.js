@@ -1,3 +1,9 @@
+/*
+        Main Three.js app
+        Copyright (C) 2018  Mehdi Dridi
+*/
+
+
 // Create a scene which will hold all our meshes to be rendered
 var scene = null;
 // Create and position a camera
@@ -30,7 +36,7 @@ var levelUp = 0;
 
 var params = {
     score: 0,
-    level: 3,
+    level: 1,
     time: 30
 };
 
@@ -40,6 +46,7 @@ var restart = { restart:function(){
         params.level = 1;
     params.time = 30;
     params.score = 0;
+        levelUp = 0;
     clearScene();
     init();
 
@@ -403,16 +410,19 @@ requestAnimationFrame(render);
 function render() {
 
    if( snake.checkBorders() || params.time===0) {
+
        clearInterval(downloadTimer);
        clearScene();
        init();
    }
 
     //check if the Snake is attacked by the bad poly
-    if(poly.checkPoint()){
-        clearInterval(downloadTimer);
-        clearScene();
-        init();
+    if(params.level===3) {
+        if (poly.checkPoint()) {
+            clearInterval(downloadTimer);
+            clearScene();
+            init();
+        }
     }
 
    if(params.score === 4){
@@ -422,6 +432,20 @@ function render() {
        params.level++;
        levelUp++;
    }
+
+
+    if(params.level===4) {
+
+        if (levelUp === 1) {
+            clearInterval(downloadTimer);
+            params.level = 1;
+            levelUp = 0;
+            params.time = 30;
+            params.score = 0;
+            clearScene();
+            init();
+        }
+    }
 
     delta += 0.13;
 

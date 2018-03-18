@@ -1,3 +1,8 @@
+/*
+        Polynoms that the Snake encounters in Level3
+        Copyright (C) 2018  Mehdi Dridi
+*/
+
 function BadPoly(scene, snake) {
     this.scene = scene;
     this.size = 4;
@@ -81,7 +86,7 @@ function BadPoly(scene, snake) {
     async function generatorDelay() {
 
 
-        await sleep(500);
+        await sleep(100);
 
         move();
         steps++;
